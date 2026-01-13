@@ -1,0 +1,66 @@
+# MACD 波动率信号机器人配置文件
+
+# 监控交易对
+symbols:
+  - BTCUSDT
+  - ETHUSDT
+  - SOLUSDT
+  - DOGEUSDT
+  - FILUSDT
+
+# 监控时间周期
+timeframes:
+  - 1h
+
+# Binance API配置
+binance:
+  base_url: https://api.binance.com
+  exchange_id: binanceusdm  # 交易所ID: binanceusdm, binance, okx等
+  timeout: 30000  # 超时时间(毫秒)
+
+# MACD参数
+strategy:
+  macd:
+    fast: 12
+    slow: 26
+    signal: 9
+  
+  # ATR波动率参数
+  atr:
+    period: 14
+    low_quantile: 0.2    # 低波动阈值(过滤)
+    high_quantile: 0.8   # 高波动阈值(过滤)
+  
+  # 历史K线数量
+  history_limit: 200
+
+# 信号控制
+signal:
+  cooldown_bars: 2                      # 同方向信号至少间隔 N 根 K 线
+  break_cooldown_on_key_level: true     # 价格触达关键位时允许打破冷却
+  max_valid_minutes: 240                # 信号有效期(分钟) - 保留用于状态清理
+
+# 企业微信推送配置
+wecom:
+  enabled: true
+  webhook_url: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=6cf15a36-5b70-4583-8c95-d36b4fd384b8
+
+# LLM分析配置
+llm:
+  enabled: true
+  provider: deepseek  # openai 或 deepseek
+  api_key: "sk-c435ed2bb58747a281085c80182aa4a5"  # 留空则从环境变量 DEEPSEEK_API_KEY 读取，或在这里填写你的 DeepSeek API Key
+  base_url: "https://api.deepseek.com"  # DeepSeek API 地址
+  model: deepseek-chat  # DeepSeek 模型
+  timeout: 15  # 超时时间(秒) - 增加到15秒避免超时
+  max_tokens: 1000  # 最大token数
+
+# 代理配置（可选）
+proxy:
+  enabled: false  # 是否启用代理，如果为false则从环境变量自动检测
+  url: http://127.0.0.1:7890  # 代理地址
+
+# 运行配置
+runtime:
+  poll_interval: 300  # 轮询间隔(秒)，默认5分钟
+  state_file: .macd_vol_state.json  # 状态文件路径
